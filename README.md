@@ -4,7 +4,8 @@ A tool to generate summaries and MCQs from youtube videos within [Kalvium Livebo
 
 
 #### Sample Response
-https://gist.github.com/nikiljos/afe35497e41859db4d66b3e5520b8bbd
+https://gist.github.com/nikiljos/b4f7736b42fbb233c50e989eff180842
+
 
 #### Sample `.env`
 
