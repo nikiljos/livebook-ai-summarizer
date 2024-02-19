@@ -15,15 +15,23 @@ import { getAiResFromTranscript } from "./ai.js";
 //     "os_m1_design_implementation_structures",
 // ];
 
+// const lessonSlugs = [
+//     "os_m2_intro_to_processes",
+//     "os_m2_operation_on_processes",
+//     "os_m2_interprocess_communication",
+//     "os_m2_shared_memory_message_passing_systems",
+//     "os_m2_remote_procedure_calls",
+//     "os_m2_intro_to_threads",
+//     "os_m2_multithreading_models_hyperthreading",
+//     "os_m2_issues_in_threading",
+// ];
+
 const lessonSlugs = [
-    "os_m2_intro_to_processes",
-    "os_m2_operation_on_processes",
-    "os_m2_interprocess_communication",
-    "os_m2_shared_memory_message_passing_systems",
-    "os_m2_remote_procedure_calls",
-    "os_m2_intro_to_threads",
-    "os_m2_multithreading_models_hyperthreading",
-    "os_m2_issues_in_threading",
+    "os_m3_intro_to_CPU_scheduling",
+    "OS_fcfs_concept_assignment",
+    "OS_sjf_concept_assignment",
+    "OS_priority_concept_assignment",
+    "OS_RR_concept_assignment",
 ];
 
 const getAllTranscriptFromLesson = async (slug, index = "") => {
@@ -36,7 +44,8 @@ const getAllTranscriptFromLesson = async (slug, index = "") => {
 
 const getAllMcqFromLesson = async (slug, index = "") => {
     console.log(slug);
-    const videoIds = await getYtRefsFromLesson(slug);
+    const videoIds = (await getYtRefsFromLesson(slug))
+    // .slice(0,1);
     // const transcripts = await Promise.all(
     //     videoIds.map(async (video) => await fetchTranscript(video))
     // );
@@ -50,9 +59,9 @@ const getAllMcqFromLesson = async (slug, index = "") => {
             result.push("No transcript found for " + video);
             continue;
         }
-        const aiMcq = `### MCQ\n` + (await getAiResFromTranscript(transcript, "mcq"));
-        const aiSum = `### Summary\n` + (await getAiResFromTranscript(transcript, "summary"));
-        result.push(aiSum + "\n\n" + "*".repeat(25) + "\n\n" + aiMcq);
+        const aiMcq = `### MCQ\n` + (await getAiResFromTranscript(transcript, "mcq","gpt-3.5-turbo"));
+        // const aiSum = `### Summary\n` + (await getAiResFromTranscript(transcript, "summary"));
+        result.push([aiMcq].join("\n\n" + "*".repeat(25) + "\n\n"));
     }
 
     const textResult =
@@ -73,6 +82,6 @@ const getAllMcqFromLesson = async (slug, index = "") => {
 let i = 0;
 let indexOffset = 0;
 for await (const slug of lessonSlugs) {
-    await getAllMcqFromLesson(slug, "m2-" + (i + indexOffset));
+    await getAllMcqFromLesson(slug, "m3-mcq-" + (i + indexOffset));
     i += 1;
 }

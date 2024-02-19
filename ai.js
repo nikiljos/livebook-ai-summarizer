@@ -5,7 +5,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_KEY,
 });
 
-const getAiResponse = async (instruct, content, model = "gpt-3.5-turbo-16k") => {
+const getAiResponse = async (instruct, content, model = "gpt-3.5-turbo") => {
     // console.log({ instruct, content, model });
     const completion = await openai.chat.completions.create({
         messages: [
@@ -19,12 +19,12 @@ const getAiResponse = async (instruct, content, model = "gpt-3.5-turbo-16k") => 
     return completion.choices[0].message.content;
 };
 
-export const getAiResFromTranscript = (transcript, type) => {
+export const getAiResFromTranscript = (transcript, type, model = "gpt-3.5-turbo") => {
     console.log(type);
     const instruct =
         type == "mcq"
-            ? "Generate 30 MCQ questions along with their answers based on the lesson transcript given."
-            : "Identify all the points mentioned in the given lecture along with a detailed sumamry of each point. This should include everythoing covered in the transcript given below.";
+            ? "You are an agent that creates Multiple Choice Questions for a university exam based on a lecture transcript provided. The questions should be solely based on the given transcript. Generate 10-20 MCQ questions along with their answers based on the lesson transcript given. All the answers should have an explanation, along with the relevant sentences from the lecture transcript."
+            : "You are an agent that summarizes lecutres and create notes that cover everything covered in the lecture in great detail. These notes should cover all content in a way that it can be used to cram up all the concepts just before the exam.";
 
-    return getAiResponse(instruct, transcript);
+    return getAiResponse(instruct, transcript, model);
 };
