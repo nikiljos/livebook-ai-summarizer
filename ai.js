@@ -28,3 +28,12 @@ export const getAiResFromTranscript = (transcript, type, model = "gpt-3.5-turbo"
 
     return getAiResponse(instruct, transcript, model);
 };
+
+export const getAiResFromContent = (content, type = "", model = "gpt-3.5-turbo") => {
+    // TODO: parse yt, images and links with regex and add to end
+    const instruct =
+        "You are an agent that summarizes a given lesson text and create notes that cover everything covered in the lecture in without missing any detail. These notes should cover all content in a way that it can be used to cram up all the concepts just before the exam.";
+    // + " All the Youtube video references, image links and other URLs mentioned in the content must be present in the response along with their respective summaries";
+
+    return getAiResponse(instruct, content, model);
+};

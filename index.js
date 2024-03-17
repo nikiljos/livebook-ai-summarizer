@@ -1,18 +1,17 @@
 import "dotenv/config";
 import { fetchTranscript } from "./subtitle.js";
 import { writeFile } from "fs/promises";
-import { getYtRefsFromLesson } from "./livebook.js";
-import { getAiResFromTranscript } from "./ai.js";
+import { fetchLbLesson, getYtRefsFromLesson } from "./livebook.js";
+import { getAiResFromContent, getAiResFromTranscript } from "./ai.js";
 
 // const lessonSlug = "os_m1_operating_system_structure_services";
 // const lessonSlug = "os_m1_fundamentals_of_computer_systems";
+// "ttct_choice" -> test case for yt and content mix
 
 const lessonSlugs = [
-    "os_m3_intro_to_CPU_scheduling",
-    "OS_fcfs_concept_assignment",
-    "OS_sjf_concept_assignment",
-    "OS_priority_concept_assignment",
-    "OS_RR_concept_assignment",
+    "structure_sign_languages",
+    "internet_slang_memes",
+    "language_preservation_technology",
 ];
 
 const getAllTranscriptFromLesson = async (slug, index = "") => {
@@ -23,8 +22,8 @@ const getAllTranscriptFromLesson = async (slug, index = "") => {
     await writeFile(`./result/${index}-${slug}.txt`, transcripts.join("\n\n\n\n"));
 };
 
-const getAllMcqFromLesson = async (slug, index = "") => {
-    console.log(slug);
+const getVideoSummaryFromLesson = async (slug, index = "") => {
+    console.log("Video Summary:", slug);
     const videoIds = await getYtRefsFromLesson(slug);
     // .slice(0,1);
     // const transcripts = await Promise.all(
@@ -55,14 +54,22 @@ const getAllMcqFromLesson = async (slug, index = "") => {
             .split("\n")
             .map((line) => line + "  ")
             .join("\n");
-    await writeFile(`./result/ai-${index}-${slug}.md`, textResult);
+    await writeFile(`./result/aiV-${index}-${slug}.md`, textResult);
 };
 
 // const transcript = await fetchTranscript(videoId);
 // await getAllTranscriptFromLesson(lessonSlug);
 
+const getSummaryFromLesson = async (slug, index = "") => {
+    console.log("Content Summary:", slug);
+    const content = await fetchLbLesson(slug);
+    const summary = await getAiResFromContent(content.content);
+    await writeFile(`./result/aiC-${index}-${slug}.md`, summary);
+};
+
 let i = 0;
 for await (const slug of lessonSlugs) {
-    await getAllMcqFromLesson(slug, "dsa-ll-" + i);
+    await getVideoSummaryFromLesson(slug, "hl-m3-" + i);
+    await getSummaryFromLesson(slug, "hl-m3-" + i);
     i += 1;
 }

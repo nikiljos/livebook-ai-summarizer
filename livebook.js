@@ -19,7 +19,7 @@ const parseYtRefs = (content) => {
     return videoIds;
 };
 
-const fetchLbLesson = async (slug) => {
+export const fetchLbLesson = async (slug) => {
     const lessonId = await getIdFromSlug(slug);
 
     const lessonData = await fetch(`${livebookApiUrl}/api/learning_units/${lessonId}/lessons`)
