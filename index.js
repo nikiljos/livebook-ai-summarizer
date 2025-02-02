@@ -13,22 +13,22 @@ const lessonSlugs = [
     "internet_slang_memes",
     "language_preservation_technology",
 ];
+const prefix = "demo1-";
 
 const getAllTranscriptFromLesson = async (slug, index = "") => {
     const videoIds = await getYtRefsFromLesson(slug);
     const transcripts = await Promise.all(
         videoIds.map(async (video) => await fetchTranscript(video))
     );
-    await writeFile(`./result/${index}-${slug}.txt`, transcripts.join("\n\n\n\n"));
+    await writeFile(
+        `./result/${index}-${slug}.txt`,
+        transcripts.join("\n\n\n\n")
+    );
 };
 
 const getVideoSummaryFromLesson = async (slug, index = "") => {
     console.log("Video Summary:", slug);
     const videoIds = await getYtRefsFromLesson(slug);
-    // .slice(0,1);
-    // const transcripts = await Promise.all(
-    //     videoIds.map(async (video) => await fetchTranscript(video))
-    // );
 
     const result = [];
     for await (const video of videoIds) {
@@ -41,12 +41,14 @@ const getVideoSummaryFromLesson = async (slug, index = "") => {
         }
         // const aiMcq =
         // `### MCQ\n` + (await getAiResFromTranscript(transcript, "mcq", "gpt-3.5-turbo"));
-        const aiSum = `### Summary\n` + (await getAiResFromTranscript(transcript, "summary"));
+        const aiSum =
+            `### Summary\n` +
+            (await getAiResFromTranscript(transcript, "summary"));
         result.push([aiSum].join("\n\n" + "*".repeat(25) + "\n\n"));
     }
 
     const textResult =
-        `# ${slug}\n\n## Video IDs \n${videoIds
+        `# ${slug}\n\n[**Livebook**](https://kalvium.community/livebooks?lu=${slug})\n\n## Video IDs \n${videoIds
             .map((vid) => `- [${vid}](https://youtu.be/${vid})`)
             .join("\n")}\n\n` +
         result
@@ -57,19 +59,20 @@ const getVideoSummaryFromLesson = async (slug, index = "") => {
     await writeFile(`./result/aiV-${index}-${slug}.md`, textResult);
 };
 
-// const transcript = await fetchTranscript(videoId);
-// await getAllTranscriptFromLesson(lessonSlug);
-
 const getSummaryFromLesson = async (slug, index = "") => {
     console.log("Content Summary:", slug);
     const content = await fetchLbLesson(slug);
     const summary = await getAiResFromContent(content.content);
-    await writeFile(`./result/aiC-${index}-${slug}.md`, summary);
+    const textResult = `# ${slug}\n\n[**Livebook**](https://kalvium.community/livebooks?lu=${slug})\n\n${summary}`;
+    await writeFile(`./result/aiC-${index}-${slug}.md`, textResult);
 };
 
-let i = 0;
+// ------- Driver Code --------
+let i = 1;
 for await (const slug of lessonSlugs) {
-    await getVideoSummaryFromLesson(slug, "hl-m3-" + i);
-    await getSummaryFromLesson(slug, "hl-m3-" + i);
+    await Promise.allSettled([
+        getVideoSummaryFromLesson(slug, prefix + i),
+        getSummaryFromLesson(slug, prefix + i),
+    ]);
     i += 1;
 }

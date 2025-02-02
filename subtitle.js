@@ -5,7 +5,7 @@ export const fetchTranscript = async (videoId) => {
         videoID: videoId, // youtube video id
         //   lang: 'fr' // default: `en`
     }).catch((err) => {
-        console.log(err);
+        console.log(err.message);
         return false;
     });
 

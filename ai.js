@@ -5,8 +5,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_KEY,
 });
 
-const getAiResponse = async (instruct, content, model = "gpt-3.5-turbo") => {
-    // console.log({ instruct, content, model });
+const getAiResponse = async (instruct, content, model = "gpt-4o-mini") => {
     const completion = await openai.chat.completions.create({
         messages: [
             { role: "system", content: instruct },
@@ -19,7 +18,11 @@ const getAiResponse = async (instruct, content, model = "gpt-3.5-turbo") => {
     return completion.choices[0].message.content;
 };
 
-export const getAiResFromTranscript = (transcript, type, model = "gpt-3.5-turbo") => {
+export const getAiResFromTranscript = (
+    transcript,
+    type,
+    model = "gpt-4o-mini"
+) => {
     console.log(type);
     const instruct =
         type == "mcq"
@@ -29,7 +32,11 @@ export const getAiResFromTranscript = (transcript, type, model = "gpt-3.5-turbo"
     return getAiResponse(instruct, transcript, model);
 };
 
-export const getAiResFromContent = (content, type = "", model = "gpt-3.5-turbo") => {
+export const getAiResFromContent = (
+    content,
+    type = "",
+    model = "gpt-4o-mini"
+) => {
     // TODO: parse yt, images and links with regex and add to end
     const instruct =
         "You are an agent that summarizes a given lesson text and create notes that cover everything covered in the lecture in without missing any detail. These notes should cover all content in a way that it can be used to cram up all the concepts just before the exam.";

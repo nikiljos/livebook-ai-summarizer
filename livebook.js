@@ -22,7 +22,14 @@ const parseYtRefs = (content) => {
 export const fetchLbLesson = async (slug) => {
     const lessonId = await getIdFromSlug(slug);
 
-    const lessonData = await fetch(`${livebookApiUrl}/api/learning_units/${lessonId}/lessons`)
+    if (!lessonId) {
+        console.log("Invalid Slug", slug);
+        throw new Error("invalid-slug");
+    }
+
+    const lessonData = await fetch(
+        `${livebookApiUrl}/api/learning_units/${lessonId}/lessons`
+    )
         .then((res) => res.json())
         .then((data) => data.list[0]);
 
@@ -30,11 +37,11 @@ export const fetchLbLesson = async (slug) => {
 };
 
 const getIdFromSlug = async (slug) => {
-    const idSlugMap = await fetch(`${livebookApiUrl}/api/learning_units/`).then((res) =>
-        res.json()
+    const idSlugMap = await fetch(`${livebookApiUrl}/api/learning_units/`).then(
+        (res) => res.json()
     );
 
     const lessonInfo = idSlugMap.list.find((elt) => elt.slug == slug);
 
-    return lessonInfo.id;
+    return lessonInfo?.id;
 };
