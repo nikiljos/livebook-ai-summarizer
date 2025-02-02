@@ -17,9 +17,19 @@ OPENAI_KEY=sk-*********************
 LIVEBOOK_API_URL="https://authoring-api.kalvium.community"
 ```
 
-
-> #### Create Gist with all results
-> Using [Github CLI](https://cli.github.com/)
-> ```
-> gh gist create result/ai*
-> ```
+> ### Create Gist with all results
+> <details><summary><b>Using <code>upload.sh</code></b></summary>
+> <p>
+> 
+> <br>
+> <img width="500" alt="screenshot" src="https://github.com/user-attachments/assets/6b14e494-59ac-4860-9e8b-55a5a5fa9cf7" />
+> 
+> </p>
+> </details> 
+> <details><summary><b>Using Github CLI</code></b></summary>
+> <p>
+> 
+> <br>
+> <code>gh gist create result/ai*</code>
+> </p>
+> </details> 
