@@ -3,17 +3,8 @@ import { fetchTranscript } from "./subtitle.js";
 import { writeFile } from "fs/promises";
 import { fetchLbLesson, getYtRefsFromLesson } from "./livebook.js";
 import { getAiResFromContent, getAiResFromTranscript } from "./ai.js";
-
-// const lessonSlug = "os_m1_operating_system_structure_services";
-// const lessonSlug = "os_m1_fundamentals_of_computer_systems";
-// "ttct_choice" -> test case for yt and content mix
-
-const lessonSlugs = [
-    "structure_sign_languages",
-    "internet_slang_memes",
-    "language_preservation_technology",
-];
-const prefix = "demo1-";
+import { lessonSlugs, prefix } from "./config.js";
+import { formatIndex } from "./utils.js";
 
 const getAllTranscriptFromLesson = async (slug, index = "") => {
     const videoIds = await getYtRefsFromLesson(slug);
@@ -71,8 +62,8 @@ const getSummaryFromLesson = async (slug, index = "") => {
 let i = 1;
 for await (const slug of lessonSlugs) {
     await Promise.allSettled([
-        getVideoSummaryFromLesson(slug, prefix + i),
-        getSummaryFromLesson(slug, prefix + i),
+        getVideoSummaryFromLesson(slug, formatIndex(prefix, i)),
+        getSummaryFromLesson(slug, formatIndex(prefix, i)),
     ]);
     i += 1;
 }
